@@ -55,6 +55,7 @@
 #include <utility>
 #include <vector>
 
+#include <google/protobuf/compiler/shared_helpers.h>
 #include <google/protobuf/compiler/python/python_generator.h>
 #include <google/protobuf/descriptor.pb.h>
 
@@ -74,19 +75,9 @@ namespace python {
 
 namespace {
 
-// Returns a copy of |filename| with any trailing ".protodevel" or ".proto
-// suffix stripped.
-// TODO(robinson): Unify with copy in compiler/cpp/internal/helpers.cc.
-string StripProto(const string& filename) {
-  const char* suffix = HasSuffixString(filename, ".protodevel")
-      ? ".protodevel" : ".proto";
-  return StripSuffixString(filename, suffix);
-}
-
-
 // Returns the Python module name expected for a given .proto filename.
 string ModuleName(const string& filename) {
-  string basename = StripProto(filename);
+  string basename = shared_helpers::StripProto(filename);
   StripString(&basename, "-", '_');
   StripString(&basename, "/", '.');
   return basename + "_pb2";
