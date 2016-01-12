@@ -132,14 +132,6 @@ bool IsReserved(const string& ident) {
   return false;
 }
 
-// Returns a copy of |filename| with any trailing ".protodevel" or ".proto
-// suffix stripped.
-string StripProto(const string& filename) {
-  const char* suffix = HasSuffixString(filename, ".protodevel")
-      ? ".protodevel" : ".proto";
-  return StripSuffixString(filename, suffix);
-}
-
 // Returns the fully normalized JavaScript path for the given
 // file descriptor's package.
 string GetPath(const GeneratorOptions& options,
@@ -188,14 +180,6 @@ string GetPath(const GeneratorOptions& options,
       descriptor->containing_type()) + descriptor->name();
 }
 
-
-// Returns the fully normalized JavaScript path for the given
-// field's containing message descriptor.
-string GetPath(const GeneratorOptions& options,
-               const FieldDescriptor* descriptor) {
-  return GetPath(options, descriptor->containing_type());
-}
-
 // Returns the fully normalized JavaScript path for the given
 // enumeration descriptor.
 string GetPath(const GeneratorOptions& options,
@@ -203,16 +187,6 @@ string GetPath(const GeneratorOptions& options,
   return GetPrefix(
       options, enum_descriptor->file(),
       enum_descriptor->containing_type()) + enum_descriptor->name();
-}
-
-
-// Returns the fully normalized JavaScript path for the given
-// enumeration value descriptor.
-string GetPath(const GeneratorOptions& options,
-               const EnumValueDescriptor* value_descriptor) {
-  return GetPath(
-      options,
-      value_descriptor->type()) + "." + value_descriptor->name();
 }
 
 // - Object field name: LOWER_UNDERSCORE -> LOWER_CAMEL, except for group fields
@@ -391,14 +365,6 @@ string JSGetterName(const FieldDescriptor* field) {
   }
   return name;
 }
-
-string JSMapGetterName(const FieldDescriptor* field) {
-  return JSIdent(field,
-                 /* is_upper_camel = */ true,
-                 /* is_map = */ true);
-}
-
-
 
 string JSOneofName(const OneofDescriptor* oneof) {
   return ToUpperCamel(ParseLowerUnderscore(oneof->name()));
